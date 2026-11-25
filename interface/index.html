@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Assistant de Cours - RAG Francophone</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-container">
+            <h1 class="app-title">Mon Assistant de Cours</h1>
+            <p class="app-subtitle">Interrogez vos cours PDF grace au RAG local et souverain</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="documents-section" aria-labelledby="documents-title">
+            <h2 id="documents-title" class="section-title">Documents de cours disponibles</h2>
+            <div id="documents-container" class="documents-container">
+                <p id="documents-loading" class="info-text">Chargement des documents...</p>
+                <ul id="documents-list" class="documents-list" hidden></ul>
+            </div>
+            <noscript>
+                <div class="noscript-notice">
+                    <p>JavaScript est desactive sur votre navigateur. L'interface interactive necessite JavaScript pour interroger l'API locale.</p>
+                </div>
+            </noscript>
+        </section>
+
+        <section class="upload-section" aria-labelledby="upload-title">
+            <h2 id="upload-title" class="section-title">Ajouter un nouveau support de cours (PDF)</h2>
+            <form id="upload-form" class="upload-form">
+                <div class="form-group">
+                    <label for="pdf-file-input" class="form-label">Selectionner un fichier PDF a integrer :</label>
+                    <input 
+                        type="file" 
+                        id="pdf-file-input" 
+                        name="file" 
+                        accept=".pdf,application/pdf" 
+                        class="form-file-input" 
+                        aria-describedby="upload-help" 
+                        required
+                    >
+                    <span id="upload-help" class="form-help">Formats acceptes : documents PDF contenant du texte. Le document sera extrait et indexe automatiquement.</span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="upload-btn" class="btn btn-primary">
+                        <span id="upload-btn-text">Importer et indexer le cours</span>
+                    </button>
+                </div>
+            </form>
+            <div class="status-region" aria-live="polite">
+                <div id="upload-loading" class="loading-indicator" hidden>
+                    <div class="spinner" aria-hidden="true"></div>
+                    <span>Extraction du texte et indexation vectorielle en cours...</span>
+                </div>
+                <div id="upload-message" class="alert alert-success" hidden role="status"></div>
+                <div id="upload-error" class="alert alert-error" hidden role="alert"></div>
+            </div>
+        </section>
+
+        <section class="query-section" aria-labelledby="query-title">
+            <h2 id="query-title" class="section-title">Poser une question</h2>
+            <form id="rag-form" class="rag-form" novalidate>
+                <div class="form-group">
+                    <label for="question-input" class="form-label">Votre question sur les cours :</label>
+                    <textarea 
+                        id="question-input" 
+                        name="question" 
+                        class="form-textarea" 
+                        rows="4" 
+                        placeholder="Exemple : Quelle est la propriete flex-direction par defaut en CSS ?" 
+                        required 
+                        aria-describedby="textarea-help"
+                    ></textarea>
+                    <span id="textarea-help" class="form-help">Astuce : utilisez Ctrl+Entree pour soumettre votre question.</span>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" id="submit-btn" class="btn btn-primary">
+                        <span id="btn-text">Envoyer la question</span>
+                    </button>
+                    <button type="button" id="clear-btn" class="btn btn-secondary">
+                        Effacer
+                    </button>
+                </div>
+            </form>
+
+            <div id="status-region" class="status-region" aria-live="polite">
+                <div id="loading-indicator" class="loading-indicator" hidden>
+                    <div class="spinner" aria-hidden="true"></div>
+                    <span>Recherche des passages pertinents et formulation de la reponse...</span>
+                </div>
+                <div id="error-message" class="alert alert-error" hidden role="alert"></div>
+            </div>
+        </section>
+
+        <section class="response-section" aria-labelledby="response-title">
+            <h2 id="response-title" class="section-title">Reponse de l'assistant</h2>
+
+            <div id="empty-state" class="empty-state">
+                <p class="empty-state-title">Aucune question analysee pour l'instant</p>
+                <p class="empty-state-description">Saisissez une question dans le formulaire ci-dessus pour obtenir une reponse extraite fidelement de vos supports de cours.</p>
+            </div>
+
+            <div id="response-panel" class="response-panel" hidden>
+                <div class="answer-card">
+                    <h3 class="card-subtitle">Reponse generee :</h3>
+                    <p id="answer-text" class="answer-text"></p>
+                </div>
+
+                <div class="sources-card">
+                    <h3 class="card-subtitle">Passages sources cites :</h3>
+                    <ul id="sources-list" class="sources-list"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p>Mon Assistant de Cours &mdash; Systeme RAG 100% local, sans API payante et respectueux de la vie privee.</p>
+        </div>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>
